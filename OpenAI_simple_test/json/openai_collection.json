@@ -1,0 +1,122 @@
+{
+	"info": {
+		"_postman_id": "9631c512-f89e-40ad-b32d-62dd66bb0aca",
+		"name": "测试学习",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "22966981"
+	},
+	"item": [
+		{
+			"name": "可用模型",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status 200\", () => pm.response.to.have.status(200));\r",
+							"pm.test(\"Response has valid models\", () => {\r",
+							"  const jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData.data).to.be.an('array');\r",
+							"  pm.expect(jsonData.data[0].id).to.include('gpt');\r",
+							"});\r",
+							"pm.test(\"Console log model IDs containing 'gpt'\", function () {\r",
+							"    const modelsData = pm.response.json().data;\r",
+							"    modelsData.forEach(function(model) {\r",
+							"        if (model.id.includes('gpt')) {\r",
+							"            console.log(model.id);\r",
+							"        }\r",
+							"    });\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{base_url}}/models",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"models"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "单例对话",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response contains choices\", () => {\r",
+							"  const jsonData = pm.response.json();\r",
+							"  pm.expect(jsonData.choices).to.be.an('array');\r",
+							"  pm.expect(jsonData.choices[0].message.content).to.be.a('string');\r",
+							"});\r",
+							"pm.test(\"content console\", () => {\r",
+							"  const jsonData = pm.response.json();\r",
+							"  console.log(jsonData.choices[0].message.content)\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"model\": \"gpt-3.5-turbo\",\r\n  \"messages\": [\r\n    {\"role\": \"user\", \"content\": \"Hello! This is software test!\"}\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{base_url}}/chat/completions",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"chat",
+						"completions"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
