@@ -1,0 +1,8 @@
+login_cases:
+  - username: "20230001"
+    password: "SecureP@ssw0rd"
+    expected_title: "Dashboard"
+    
+  - username: "invalid_user"
+    password: "wrong_pass"
+    expected_error: "用户名或密码错误"
